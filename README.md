@@ -23,7 +23,7 @@ Construir habilidades demostrables en:
 ## Cómo usar este repositorio
 
 1. Sigue el plan de [`ROADMAP.md`](ROADMAP.md).
-2. Empieza por [`weeks/week-01/WEEK_01.md`](weeks/week-01/WEEK_01.md).
+2. Empieza por [`fase-1/week-01/WEEK_01.md`](fase-1/week-01/WEEK_01.md).
 3. Cada semana debe terminar con código subido a GitHub, no solamente teoría.
 4. Los ejercicios pequeños deben convertirse en commits frecuentes.
 5. El proyecto principal crecerá durante el roadmap y servirá como pieza de portafolio.
