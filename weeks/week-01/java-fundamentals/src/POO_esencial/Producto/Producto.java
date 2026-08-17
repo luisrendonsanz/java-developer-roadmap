@@ -21,14 +21,18 @@ public class Producto {
     }
 
     public void aumentarStock(int aumentoStock){
+        if (aumentoStock<=0){
+            throw new IllegalArgumentException("El aumento de stock debe ser mayor a 0");
+        }
         stock+=aumentoStock;
     }
     public void vender(int venta){
         System.out.println("Stock actual: " +stock);
         if(venta>stock){
             System.out.println("No puedes vender mas del stock actual del producto");
-        }
-        else {
+        } else if (venta<=0) {
+            throw new IllegalArgumentException("La venta debe ser mayor a 0");
+        } else {
             System.out.println("Stock del producto modificado");
             stock-=venta;
             System.out.println("Nuevo stock del producto: "+stock);
