@@ -1,6 +1,5 @@
 package POO_esencial.CuentaBancaria;
 
-import java.util.Scanner;
 
 public class CuentaBancaria {
     private double saldo = 0;
@@ -13,11 +12,14 @@ public class CuentaBancaria {
     }
 
     public void depositar(double deposito) {
+        if (deposito <= 0) {
+            throw new IllegalArgumentException("El deposito debe ser mayor a 0");
+        }
         saldo += deposito;
     }
 
     public void retirar(double retiro) {
-        System.out.println("Saldo actual: "+saldo);
+        System.out.println("Saldo actual: " + saldo);
         if (retiro > saldo) {
             System.out.println("No puedes retirar mas del saldo que tienes");
         } else if (retiro < 0) {
