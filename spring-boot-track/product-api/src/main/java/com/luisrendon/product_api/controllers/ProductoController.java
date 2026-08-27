@@ -4,9 +4,7 @@ import com.luisrendon.product_api.models.Producto;
 import jakarta.annotation.PostConstruct;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,10 +15,10 @@ public class ProductoController {
 
     @PostConstruct
     public void generarProductos() {
-        productos.add(new Producto(1, "Laptop", 12.4, 1));
-        productos.add(new Producto(2, "Laptop", 12.4, 1));
-        productos.add(new Producto(3, "Laptop", 12.4, 1));
-        productos.add(new Producto(4, "Laptop", 12.4, 1));
+        productos.add(new Producto(1, "Laptop", 452.00, 10));
+        productos.add(new Producto(2, "Mouse", 200.50, 12));
+        productos.add(new Producto(3, "Pc", 301.42, 23));
+        productos.add(new Producto(4, "Libreta", 123.32, 41));
     }
 
     @GetMapping("/api/productos/demo")
@@ -46,6 +44,14 @@ public class ProductoController {
             return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok(productoEncontrado);
+    }
+
+    @GetMapping("/api/productos/precio")
+    public List<Producto> productosCondicion(@RequestParam double min){
+        List<Producto> productosFiltrados = productos.stream()
+                .filter(n->n.getPrecio()<min)
+                .toList();
+        return productosFiltrados;
     }
 
 
