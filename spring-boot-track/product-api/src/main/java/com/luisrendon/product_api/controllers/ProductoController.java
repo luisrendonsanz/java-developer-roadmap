@@ -3,6 +3,7 @@ package com.luisrendon.product_api.controllers;
 import com.luisrendon.product_api.models.Producto;
 import jakarta.annotation.PostConstruct;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,10 +16,10 @@ public class ProductoController {
 
     @PostConstruct
     public void generarProductos() {
-        productos.add(new Producto(1, "Laptop", 452.00, 10));
-        productos.add(new Producto(2, "Mouse", 200.50, 12));
-        productos.add(new Producto(3, "Pc", 301.42, 23));
-        productos.add(new Producto(4, "Libreta", 123.32, 41));
+        productos.add(new Producto(1L, "Laptop", 452.00, 10));
+        productos.add(new Producto(2L, "Mouse", 200.50, 12));
+        productos.add(new Producto(3L, "Pc", 301.42, 23));
+        productos.add(new Producto(4L, "Libreta", 123.32, 41));
     }
 
     @GetMapping("/api/productos/demo")
@@ -32,7 +33,7 @@ public class ProductoController {
     }
 
     @GetMapping("/api/productos/{id}")
-    public ResponseEntity<Producto> obtenerProducto(@PathVariable long id) {
+    public ResponseEntity<Producto> obtenerProducto(@PathVariable Long id) {
         Producto productoEncontrado = null;
         for (Producto producto : productos) {
             if (producto.getId() == id) {
@@ -47,12 +48,22 @@ public class ProductoController {
     }
 
     @GetMapping("/api/productos/precio")
-    public List<Producto> productosCondicion(@RequestParam double min){
+    public List<Producto> productosCondicion(@RequestParam double min) {
         List<Producto> productosFiltrados = productos.stream()
-                .filter(n->n.getPrecio()<min)
+                .filter(n -> n.getPrecio() < min)
                 .toList();
         return productosFiltrados;
     }
 
+    @PostMapping("/api/productos")
+    public ResponseEntity<Producto> agregarNuevoProducto(@RequestBody Producto nuevoProducto) {
+        if (nuevoProducto.getStock() < 0 || nuevoProducto.getPrecio() < 0) {
+            return ResponseEntity.badRequest().build();
+        }
+        Long nuevoId = productos.stream().mapToLong(Producto::getId).max().orElse(0) + 1;
+        Producto productoCreado = new Producto(nuevoId,nuevoProducto.getNombre(),nuevoProducto.getPrecio(),nuevoProducto.getStock());
+        productos.add(productoCreado);
+        return ResponseEntity.status(HttpStatus.CREATED).body(productoCreado);
+    }
 
 }

@@ -1,18 +1,19 @@
 package com.luisrendon.product_api.models;
 
 public class Producto {
-    private long id;
+    private Long id;
     private String nombre;
     private double precio;
     private int stock;
 
-    public Producto(long id, String nombre, double precio, int stock) {
+    public Producto(Long id, String nombre, double precio, int stock) {
         this.id = id;
         this.nombre = nombre;
         this.precio = precio;
         this.stock = stock;
     }
-    public long getId() {
+
+    public Long getId() {
         return id;
     }
 
