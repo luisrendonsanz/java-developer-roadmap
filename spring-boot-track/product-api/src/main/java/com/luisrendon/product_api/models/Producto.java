@@ -29,6 +29,25 @@ public class Producto {
         return stock;
     }
 
+    public void setNombre(String nombre) {
+        if (nombre == null || nombre.isBlank()) {
+            throw new IllegalArgumentException("El nombre no puede ser nulo o vacío");
+        }
+        this.nombre = nombre;
+    }
+    public void setPrecio(double precio) {
+        if (precio <= 0) {
+            throw new IllegalArgumentException("El precio debe ser mayor que 0, recibido: " + precio);
+        }
+        this.precio = precio;
+    }
+    public void setStock(int stock) {
+        if (stock < 0) {
+            throw new IllegalArgumentException("El stock no puede ser negativo recibido: " + stock);
+        }
+        this.stock = stock;
+    }
+
     @Override
     public String toString() {
         return "Producto->" +

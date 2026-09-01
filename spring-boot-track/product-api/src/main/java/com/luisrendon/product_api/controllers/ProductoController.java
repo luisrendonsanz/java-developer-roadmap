@@ -29,7 +29,7 @@ public class ProductoController {
     @GetMapping("/api/productos/{id}")
     public ResponseEntity<Producto> obtenerProducto(@PathVariable Long id) {
         Producto producto = productService.buscarPorId(id);
-        if(producto==null){
+        if (producto == null) {
             return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok(producto);
@@ -44,10 +44,28 @@ public class ProductoController {
     @PostMapping("/api/productos")
     public ResponseEntity<Producto> agregarNuevoProducto(@RequestBody Producto nuevoProducto) {
         Producto productoCreado = productService.nuevoProducto(nuevoProducto);
-       if(productoCreado==null){
-           return ResponseEntity.badRequest().body(nuevoProducto);
-       }
-       return ResponseEntity.status(HttpStatus.CREATED).body(productoCreado);
+        if (productoCreado == null) {
+            return ResponseEntity.badRequest().body(nuevoProducto);
+        }
+        return ResponseEntity.status(HttpStatus.CREATED).body(productoCreado);
+    }
+
+    @PutMapping("/api/productos/{id}")
+    public ResponseEntity<Producto> actualizarProducto(
+            @PathVariable Long id,
+            @RequestBody Producto updateProducto) {
+        Producto productoActualizar = productService.updateProducto(id, updateProducto);
+        if (productoActualizar == null) {
+            ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(productoActualizar);
+    }
+
+    @DeleteMapping("api/productos/{id}")
+    public ResponseEntity<Producto> eliminarProducto(@PathVariable Long id) {
+        Producto productoEliminar = productService.deleteProducto(id);
+        if (productoEliminar == null) return ResponseEntity.notFound().build();
+        return ResponseEntity.ok(productoEliminar);
     }
 
 }
