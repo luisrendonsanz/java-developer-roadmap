@@ -3,7 +3,6 @@ package com.luisrendon.product_api.controllers;
 import com.luisrendon.product_api.models.Producto;
 import jakarta.annotation.PostConstruct;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -36,7 +35,7 @@ public class ProductoController {
     public ResponseEntity<Producto> obtenerProducto(@PathVariable Long id) {
         Producto productoEncontrado = null;
         for (Producto producto : productos) {
-            if (producto.getId() == id) {
+            if (producto.getId().equals(id)) {
                 productoEncontrado = producto;
                 break;
             }
@@ -50,7 +49,7 @@ public class ProductoController {
     @GetMapping("/api/productos/precio")
     public List<Producto> productosCondicion(@RequestParam double min) {
         List<Producto> productosFiltrados = productos.stream()
-                .filter(n -> n.getPrecio() < min)
+                .filter(n -> n.getPrecio() >= min)
                 .toList();
         return productosFiltrados;
     }
