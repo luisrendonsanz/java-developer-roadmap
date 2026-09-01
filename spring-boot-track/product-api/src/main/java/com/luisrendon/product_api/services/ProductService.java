@@ -46,4 +46,25 @@ public class ProductService {
         return productos.stream()
                 .filter(n -> n.getPrecio() >= precio).toList();
     }
+
+    public Producto updateProducto(Long id, Producto updateProducto) {
+        for (Producto producto : productos) {
+            if (producto.getId().equals(id)) {
+                producto.setPrecio(updateProducto.getPrecio());
+                producto.setNombre(updateProducto.getNombre());
+                producto.setStock(updateProducto.getStock());
+                return producto;
+            }
+        }
+        return null;
+    }
+
+    public Producto deleteProducto(Long id) {
+        Producto productoEliminar = buscarPorId(id);
+        if (productoEliminar != null) {
+            productos.remove(productoEliminar);
+            return productoEliminar;
+        }
+        return null;
+    }
 }
