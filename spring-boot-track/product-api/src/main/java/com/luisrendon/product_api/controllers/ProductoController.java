@@ -2,6 +2,7 @@ package com.luisrendon.product_api.controllers;
 
 import com.luisrendon.product_api.models.Producto;
 import com.luisrendon.product_api.services.ProductService;
+import jakarta.annotation.Nullable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,12 +19,12 @@ public class ProductoController {
 
     @GetMapping("/api/productos/demo")
     public Producto devolverUnProducto() {
-        return productService.mostrarProductos().getFirst(); // en este caso devolvermos el primer producto
+        return productService.getAllProducts().getFirst(); // en este caso devolvermos el primer producto
     }
 
     @GetMapping("/api/productos")
     public List<Producto> obtenerProductos() {
-        return productService.mostrarProductos();
+        return productService.getAllProducts();
     }
 
     @GetMapping("/api/productos/{id}")
@@ -64,8 +65,8 @@ public class ProductoController {
     @DeleteMapping("api/productos/{id}")
     public ResponseEntity<Producto> eliminarProducto(@PathVariable Long id) {
         Producto productoEliminar = productService.deleteProducto(id);
-        if (productoEliminar == null) return ResponseEntity.notFound().build();
-        return ResponseEntity.ok(productoEliminar);
+        if (productoEliminar == null) return ResponseEntity.noContent().build();
+        return ResponseEntity.noContent().build();
     }
 
 }

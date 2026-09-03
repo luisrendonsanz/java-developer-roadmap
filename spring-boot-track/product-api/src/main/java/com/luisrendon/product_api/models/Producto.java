@@ -1,16 +1,31 @@
 package com.luisrendon.product_api.models;
 
+
+import jakarta.persistence.*;
+
+@Entity
+@Table(name = "products")
 public class Producto {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String nombre;
     private double precio;
     private int stock;
+
+    public Producto(){
+
+    }
 
     public Producto(Long id, String nombre, double precio, int stock) {
         this.id = id;
         this.nombre = nombre;
         this.precio = precio;
         this.stock = stock;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public Long getId() {

@@ -1,54 +1,43 @@
 package com.luisrendon.product_api.services;
 
 import com.luisrendon.product_api.models.Producto;
-import jakarta.annotation.PostConstruct;
+import com.luisrendon.product_api.repositories.ProductRepository;
 import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
 public class ProductService {
-    private final List<Producto> productos = new ArrayList<>();
 
-    @PostConstruct
-    public void generarProductos() {
-        productos.add(new Producto(1L, "Laptop", 452.00, 10));
-        productos.add(new Producto(2L, "Mouse", 200.50, 12));
-        productos.add(new Producto(3L, "Pc", 301.42, 23));
-        productos.add(new Producto(4L, "Libreta", 123.32, 41));
+    private final ProductRepository productRepository;
+
+    public ProductService(ProductRepository productRepository) {
+        this.productRepository = productRepository;
     }
 
-    public List<Producto> mostrarProductos() {
-        return productos;
+    public List<Producto> getAllProducts() {
+        return productRepository.findAll();
     }
 
     public Producto buscarPorId(Long id) {
-        for (Producto producto : productos) {
-            if (producto.getId().equals(id)) {
-                return producto;
-            }
-        }
-        return null;
+        return productRepository.findById(id).orElse(null);
     }
 
     public Producto nuevoProducto(Producto nuevoProducto) {
         if (nuevoProducto.getStock() < 0 || nuevoProducto.getPrecio() < 0) {
             return null;
         }
-        Long nuevoId = productos.stream().mapToLong(Producto::getId).max().orElse(0) + 1;
-        Producto productoCreado = new Producto(nuevoId, nuevoProducto.getNombre(), nuevoProducto.getPrecio(), nuevoProducto.getStock());
-        productos.add(productoCreado);
-        return productoCreado;
+        nuevoProducto.setId(null);
+        return productRepository.save(nuevoProducto);
     }
 
     public List<Producto> productoFiltrado(double precio) {
-        return productos.stream()
+        List<Producto> productoList = getAllProducts();
+        return productoList.stream()
                 .filter(n -> n.getPrecio() >= precio).toList();
     }
 
     public Producto updateProducto(Long id, Producto updateProducto) {
-        for (Producto producto : productos) {
+        for (Producto producto : getAllProducts()) {
             if (producto.getId().equals(id)) {
                 producto.setPrecio(updateProducto.getPrecio());
                 producto.setNombre(updateProducto.getNombre());
@@ -58,13 +47,9 @@ public class ProductService {
         }
         return null;
     }
-
     public Producto deleteProducto(Long id) {
-        Producto productoEliminar = buscarPorId(id);
-        if (productoEliminar != null) {
-            productos.remove(productoEliminar);
-            return productoEliminar;
-        }
-        return null;
+        Producto productoEliminado = productRepository.findById(id).orElse(null);
+        productRepository.deleteById(id);
+        return productoEliminado;
     }
 }
