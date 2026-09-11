@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class SaludoController {
 
     @GetMapping("/api/hello")
-    public String saludo(){
+    public String saludo() {
         return "Hola es mi primer endpoint de springBott";
     }
 }
