@@ -1,5 +1,6 @@
 package com.luisrendon.product_api.services;
 
+import com.luisrendon.product_api.Exception.ProductoNoEncontradoException;
 import com.luisrendon.product_api.dto.ProductRequestDto;
 import com.luisrendon.product_api.dto.ProductDtoResponse;
 import com.luisrendon.product_api.models.Producto;
@@ -28,17 +29,12 @@ public class ProductService {
     }
 
     public ProductDtoResponse buscarPorId(Long id) {
-        Producto producto = productRepository.findById(id).orElse(null);
-        if (producto != null) {
-            return convertirEnRespuesta(producto);
-        }
-        return null;
+        Producto producto = productRepository.findById(id).orElseThrow(() -> new ProductoNoEncontradoException(id));
+
+        return convertirEnRespuesta(producto);
     }
 
     public ProductRequestDto nuevoProducto(ProductRequestDto nuevoProducto) {
-        if (nuevoProducto.getStock() < 0 || nuevoProducto.getPrecio() < 0) {
-            return null;
-        }
         Producto producto = convertirAentidad(nuevoProducto);
         Producto guardado = productRepository.save(producto);
         return convertirADto(guardado);
@@ -50,25 +46,22 @@ public class ProductService {
     }
 
     public ProductDtoResponse updateProducto(Long id, ProductRequestDto updateProducto) {
-        Producto producto = productRepository.findById(id).orElse(null);
-        if (producto != null) {
-            producto.setNombre(updateProducto.getNombre());
-            producto.setStock(updateProducto.getStock());
-            producto.setPrecio(updateProducto.getPrecio());
-            Producto productoActualizado = productRepository.save(producto);
-            return convertirEnRespuesta(productoActualizado);
-        }
-        return null;
+        Producto producto = productRepository.findById(id).orElseThrow(() -> new ProductoNoEncontradoException(id));
+
+        producto.setNombre(updateProducto.getNombre());
+        producto.setStock(updateProducto.getStock());
+        producto.setPrecio(updateProducto.getPrecio());
+        Producto productoActualizado = productRepository.save(producto);
+        return convertirEnRespuesta(productoActualizado);
 
     }
 
     public ProductDtoResponse deleteProducto(Long id) {
-        Producto productoEliminado = productRepository.findById(id).orElse(null);
+        Producto productoEliminado = productRepository.findById(id).orElseThrow(() -> new ProductoNoEncontradoException(id));
         productRepository.deleteById(id);
-        if (productoEliminado != null) {
-            return convertirEnRespuesta(productoEliminado);
-        }
-        return null;
+
+        return convertirEnRespuesta(productoEliminado);
+
     }
 
     private ProductRequestDto convertirADto(Producto producto) {
