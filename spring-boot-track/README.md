@@ -49,7 +49,7 @@ Aprenderás:
 - JSON
 - códigos HTTP básicos
 
-Material: [`01-product-api/README.md`](01-product-api/README.md)
+Material: [`product-api/README.md`](product-api/README.md)
 
 ### Etapa 1 — Service e inyección de dependencias
 Mover la lógica fuera del controller.
