@@ -1,151 +1,51 @@
-# 01 — Product API en memoria
+# Product API — Java 21, Spring Boot y PostgreSQL
 
-## Objetivo
+API REST de productos desarrollada como práctica de **Backend Junior**. El código está organizado por capas para separar las peticiones HTTP, la lógica de aplicación y el acceso a datos.
 
-Construir tu primera API REST con Spring Boot sin base de datos. La meta es entender el recorrido de una petición HTTP y conectar lo que ya sabes de Java con un backend real.
+> **Estado:** proyecto de aprendizaje en desarrollo. Se documentan las funciones presentes en el código; su funcionamiento no ha sido validado con una ejecución completa durante esta revisión.
 
-## Regla importante
+## Stack
 
-No copies un CRUD completo de un tutorial. Resuelve cada bloque por separado y prueba antes de avanzar.
+- Java 21, Maven y Spring Boot 4.1.1
+- Spring Web MVC
+- Spring Data JPA + PostgreSQL
+- Bean Validation
+- Docker Compose (contenedor PostgreSQL)
 
-## Paso 1 — Crear y ejecutar el proyecto
-
-Genera el proyecto desde Spring Initializr con:
-
-- Maven
-- Java 21
-- Spring Boot estable 4.1.x
-- Group: `com.luisrendon`
-- Artifact: `product-api`
-- Dependency: Spring Web
-
-### Definition of Done
-- [ ] El proyecto abre en IntelliJ
-- [ ] Maven descarga dependencias correctamente
-- [ ] La aplicación inicia sin errores
-- [ ] Puedes identificar la clase con `@SpringBootApplication`
-- [ ] Puedes explicar qué hace `SpringApplication.run(...)` a nivel general
-
-## Ejercicio 1 — Hello endpoint
-
-Crea un endpoint:
-
-```http
-GET /api/hello
-```
-
-Debe responder texto simple, por ejemplo:
+## Estructura
 
 ```text
-Spring Boot funcionando
+src/main/java/com/luisrendon/product_api/
+├── controllers/   # Endpoints y manejo global de errores
+├── services/      # Lógica de aplicación
+├── repositories/  # Acceso a datos con JpaRepository
+├── models/        # Entidad Producto (JPA)
+├── dto/           # DTO de entrada, salida y errores
+└── Exception/     # Excepción para recursos inexistentes
 ```
 
-### Restricción
-Hazlo con un `@RestController`. No agregues Service todavía.
+Flujo principal: **Cliente → Controller → Service → Repository → PostgreSQL**.
 
-### Preguntas que debes poder responder
-- [ ] ¿Qué hace `@RestController`?
-- [ ] ¿Qué hace `@GetMapping`?
-- [ ] ¿Por qué ya no necesitas `Scanner` para recibir una petición?
-- [ ] ¿Quién llama al método del controller?
+## Endpoints presentes en el código
 
-## Ejercicio 2 — Primer JSON
+| Método | Ruta | Descripción | Respuesta configurada |
+|---|---|---|---|
+| GET | `/api/productos` | Listar productos | 200 |
+| GET | `/api/productos/{id}` | Buscar por ID | 200 / 404 |
+| GET | `/api/productos/precio?precio=100` | Filtrar por precio mínimo | 200 |
+| GET | `/api/productos/demo` | Devolver el primer producto | 200 si existe |
+| POST | `/api/productos` | Crear producto validado | 201 |
+| PUT | `/api/productos/{id}` | Actualizar producto | 200 / 404 |
+| DELETE | `/api/productos/{id}` | Eliminar y devolver el producto eliminado | 200 / 404 |
 
-Crea una clase `Producto` con:
+El parámetro real del filtro es **`precio`**, no `min`. El controlador de creación devuelve actualmente el DTO de solicitud; aún no devuelve el ID del recurso creado.
 
-- `Long id`
-- `String nombre`
-- `double precio`
-- `int stock`
-
-Crea:
-
-```http
-GET /api/productos/demo
-```
-
-Debe devolver un objeto `Producto` y Spring debe convertirlo a JSON.
-
-### Debes observar
-- [ ] Devuelves un objeto Java, no un JSON escrito a mano
-- [ ] El navegador/cliente recibe JSON
-- [ ] Puedes explicar de forma general que Spring/Jackson serializa el objeto
-
-## Ejercicio 3 — Lista de productos
-
-Mantén temporalmente una:
-
-```java
-List<Producto>
-```
-
-en memoria con al menos 5 productos.
-
-Implementa:
-
-```http
-GET /api/productos
-```
-
-Debe devolver todos los productos.
-
-### Restricciones
-- usa `List<Producto>`;
-- no uses base de datos;
-- no uses Streams todavía si un `for` te resulta más claro.
-
-## Ejercicio 4 — Buscar por id
-
-Implementa:
-
-```http
-GET /api/productos/{id}
-```
-
-Ejemplos:
-
-```text
-/api/productos/1
-/api/productos/4
-```
-
-Busca el producto dentro de la lista.
-
-### Primera versión permitida
-Puedes devolver `Producto` o `null`. Después lo mejoraremos con `Optional` y `ResponseEntity`.
-
-### Preguntas
-- [ ] ¿Qué valor recibe el método cuando visitas `/api/productos/4`?
-- [ ] ¿Para qué sirve `@PathVariable`?
-- [ ] ¿Qué debería ocurrir profesionalmente si no existe el producto?
-
-## Ejercicio 5 — Filtrar por precio
-
-Implementa:
-
-```http
-GET /api/productos/precio?min=100
-```
-
-Debe devolver solamente productos cuyo precio sea mayor o igual al valor recibido.
-
-Practicarás:
-- `@RequestParam`
-- `List`
-- bucles/condiciones
-- objetos
-
-## Ejercicio 6 — Crear producto
-
-Implementa:
+Ejemplo de solicitud de creación:
 
 ```http
 POST /api/productos
-```
+Content-Type: application/json
 
-Debe recibir JSON como:
-
-```json
 {
   "nombre": "Monitor",
   "precio": 4500,
@@ -153,78 +53,51 @@ Debe recibir JSON como:
 }
 ```
 
-y agregar un nuevo producto a la lista.
+## Ejecución local
 
-### Restricciones iniciales
-- no uses base de datos;
-- genera el id dentro de la aplicación;
-- valida al menos precio y stock no negativos;
-- usa `@RequestBody`.
+**Requisitos:** JDK 21, Docker con Compose y un puerto 5432 disponible.
 
-## Ejercicio 7 — Detectar el problema de diseño
+1. Desde esta carpeta, crea un archivo `.env` local (está ignorado por Git) con tus propias credenciales:
 
-Cuando los endpoints anteriores funcionen, responde en el PR:
+   ```dotenv
+   POSTGRES_DB=product_api
+   POSTGRES_USER=product_api_user
+   POSTGRES_PASSWORD=cambia_esta_clave_local
+   ```
 
-1. ¿Qué responsabilidades tiene ahora el controller?
-2. ¿Está haciendo demasiadas cosas?
-3. ¿Qué lógica podría vivir en una clase `ProductoService`?
-4. ¿Por qué sería útil separar HTTP de la lógica de productos?
+2. Inicia PostgreSQL:
 
-**Todavía no refactorices hasta poder explicar el problema.** La siguiente etapa será precisamente Controller → Service.
+   ```bash
+   docker compose up -d
+   ```
 
-## Reto opcional
+3. Copia `src/main/resources/application-example.properties` a `src/main/resources/application-dev.properties` (ignorado por Git). Ajusta la URL a `jdbc:postgresql://localhost:5432/product_api`, el usuario y la contraseña según tu `.env`.
 
-Agrega:
+4. Ejecuta la aplicación:
 
-```http
-GET /api/productos/stock
-```
+   ```bash
+   ./mvnw spring-boot:run
+   ```
 
-que devuelva solo productos con `stock > 0`.
+   En Windows, usa `mvnw.cmd spring-boot:run`.
 
-Después intenta una segunda versión con Stream API y compara cuál entiendes mejor.
+5. Con la base levantada y la configuración lista, puedes intentar las pruebas existentes:
 
-## Commits sugeridos
+   ```bash
+   ./mvnw test
+   ```
 
-No es obligatorio usar exactamente estos mensajes, pero sí separar el trabajo:
+**Importante:** esta guía describe la configuración esperada. Aún hay que comprobarla en una instalación limpia y ampliar la suite de pruebas (actualmente solo se incluye un test de carga de contexto).
 
-```text
-feat: create first Spring Boot endpoint
-feat: add product model and demo endpoint
-feat: list products from memory
-feat: find product by id
-feat: filter products by minimum price
-feat: create products from request body
-```
+## Limitaciones y mejoras pendientes
 
-## Definition of Done
+- Se usa `double` para precios; conviene migrar a **BigDecimal** antes de usar el dominio en un contexto financiero.
+- El filtrado por precio se hace sobre la lista recuperada, no con una consulta a la base.
+- `/api/productos/demo` obtiene el primer elemento y puede fallar si no hay productos.
+- Falta comprobar errores de validación y unificar el contrato de respuesta HTTP.
+- Las pruebas automatizadas son mínimas; faltan pruebas unitarias, de API e integración.
+- No se documenta autenticación ni autorización; no debe desplegarse como servicio público sin revisarlas.
 
-- [ ] Proyecto Spring Boot ejecutándose
-- [ ] `GET /api/hello`
-- [ ] `GET /api/productos/demo`
-- [ ] `GET /api/productos`
-- [ ] `GET /api/productos/{id}`
-- [ ] `GET /api/productos/precio?min=...`
-- [ ] `POST /api/productos`
-- [ ] Entiendes `@RestController`
-- [ ] Entiendes `@GetMapping` / `@PostMapping`
-- [ ] Entiendes `@PathVariable`
-- [ ] Entiendes `@RequestParam`
-- [ ] Entiendes `@RequestBody`
-- [ ] Puedes explicar cómo un objeto Java termina enviado como JSON
-- [ ] Hiciste varios commits pequeños
-- [ ] Abriste PR sin hacer merge hasta revisar el código
+## Objetivo
 
-## Lo siguiente
-
-Cuando termines esta entrega, el siguiente refactor será:
-
-```text
-ProductoController
-        ↓
-ProductoService
-        ↓
-List<Producto>
-```
-
-Ahí aprenderás inyección de dependencias usando un problema que ya conoces, en lugar de memorizar IoC/DI de forma aislada.
+Demostrar y seguir mejorando fundamentos de APIs REST, diseño por capas y persistencia. Las siguientes mejoras deben acompañarse de pruebas y ejemplos de uso reproducibles.

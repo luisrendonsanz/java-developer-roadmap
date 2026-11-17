@@ -1,77 +1,47 @@
-# Java Backend Developer Roadmap — 24 semanas
+# Java Backend Developer · Aprendizaje y proyectos
 
-Este repositorio es mi sistema de entrenamiento para pasar de fundamentos de Java a estar listo para postularme como **Java Backend Developer Jr**.
+Repositorio de práctica para desarrollar habilidades de **Java Backend Junior** con Java 21, Spring Boot, APIs REST y persistencia.
 
-## Objetivo
+> Este repositorio documenta una formación en curso. Las tecnologías del plan de estudio no significan que todas estén implementadas o dominadas.
 
-Construir habilidades demostrables en:
+## Proyecto con código: Product API
 
-- Java 21 y Java Core
-- Programación Orientada a Objetos
-- Colecciones, genéricos, excepciones, streams y lambdas
-- SQL y PostgreSQL
-- Spring Boot
-- APIs REST
-- JPA / Hibernate
-- Testing con JUnit y Mockito
-- Git y GitHub
-- Docker
-- CI/CD
-- Seguridad básica
-- Proyecto de portafolio backend
+**[Explorar Product API](spring-boot-track/product-api/)** · [Guía técnica](spring-boot-track/product-api/README.md)
 
-## Cómo usar este repositorio
+API REST de productos construida con **Java 21, Spring Boot 4.1.1, Spring Data JPA y PostgreSQL**.
 
-1. Sigue el plan de [`ROADMAP.md`](ROADMAP.md).
-2. Los fundamentos y ejercicios de Java están organizados en `fase-1/`.
-3. Desde el checkpoint de POO esencial, Spring Boot se estudia en paralelo mediante [`spring-boot-track/`](spring-boot-track/README.md).
-4. Cada bloque debe terminar con código subido a GitHub, no solamente teoría.
-5. Los ejercicios pequeños deben convertirse en commits frecuentes.
-6. El proyecto principal crecerá durante el roadmap y servirá como pieza de portafolio.
+En el código actual se pueden revisar:
+- Endpoints HTTP para listar, buscar, filtrar, crear, actualizar y eliminar productos.
+- Separación entre **Controller, Service y Repository**.
+- Entidad JPA, DTOs, validaciones de solicitudes y manejo de errores 404.
+- Configuración local de PostgreSQL mediante Docker Compose.
 
-## Regla principal
+**Estado:** implementación presente en el repositorio, pero aún faltan pruebas automatizadas completas y una verificación de ejecución reproducible. Es un proyecto de aprendizaje, no una aplicación presentada como lista para producción.
 
-> Aprender → practicar → construir → explicar → subir a GitHub.
+## Organización
 
-No se considera dominado un tema hasta poder usarlo sin copiar un tutorial completo y explicar las decisiones tomadas.
+| Carpeta o documento | Contenido |
+|---|---|
+| [Product API](spring-boot-track/product-api/) | Aplicación Spring Boot y código fuente |
+| [Spring Boot Track](spring-boot-track/README.md) | Etapas y objetivos del aprendizaje backend |
+| [Fundamentos Java](fase-1/) | Prácticas de Java Core y POO |
+| [Roadmap de 24 semanas](ROADMAP.md) | Ruta de aprendizaje |
+| [OrderFlow](projects/ORDERFLOW.md) | Diseño del proyecto de pedidos **planificado**, aún no presentado como implementación terminada |
 
-## Estrategia actual
+También mantengo un [roadmap de ejercicios Spring Boot](https://github.com/luisrendonsanz/springboot-junior-roadmap), centrado en los enunciados y criterios de aceptación.
 
-El roadmap ya no exige terminar todo Java Core antes de tocar Spring Boot. La ruta actual usa dos carriles en paralelo:
+## Conocimientos practicados
 
-- **Carril backend:** Spring Boot, HTTP, REST, Controller, Service, Repository y persistencia.
-- **Carril Java:** reforzar POO aplicada, Collections, excepciones, Streams y otros huecos cuando aparezcan en problemas reales.
+**Con evidencia en Product API:** Java 21, Spring MVC, HTTP/REST, inyección de dependencias, DTOs, Bean Validation, JPA y PostgreSQL.
 
-Esto permite empezar a construir backend real sin abandonar las bases.
+**En el plan de aprendizaje:** JUnit/Mockito, Docker y CI/CD, seguridad y OpenAPI. Su mención aquí no implica que estén concluidos.
 
-## Proyecto principal
+## Próximos pasos
 
-Durante el roadmap construiremos **OrderFlow**, una API backend de gestión de pedidos que evolucionará desde Java puro hasta Spring Boot, PostgreSQL, testing, seguridad, Docker y CI/CD.
+- [ ] Hacer reproducible la ejecución desde un clon limpio.
+- [ ] Añadir pruebas de servicio, controlador e integración.
+- [ ] Mejorar el manejo de respuestas de error y casos límite.
+- [ ] Documentar ejemplos de peticiones y respuestas probados.
+- [ ] Publicar un proyecto backend final con pruebas y guía de ejecución.
 
-Consulta [`projects/ORDERFLOW.md`](projects/ORDERFLOW.md).
-
-## Spring Boot — punto de entrada
-
-La primera etapa será una API de productos en memoria. Empieza aquí:
-
-- [`spring-boot-track/README.md`](spring-boot-track/README.md)
-- `spring-boot-track/01-product-api/README.md`
-
-## Estado actual
-
-- [x] Repositorio creado
-- [x] Roadmap estructurado
-- [x] Fundamentos de Java
-- [x] POO esencial — checkpoint suficiente para avanzar
-- [ ] POO aplicada — reforzar en paralelo
-- [ ] Collections — reforzar en paralelo
-- [ ] Excepciones — reforzar en paralelo
-- [x] Inicio de Spring Boot habilitado
-- [ ] Primera API REST en memoria
-- [ ] SQL + PostgreSQL
-- [ ] JPA / Hibernate
-- [ ] Testing
-- [ ] Docker + CI/CD
-- [ ] OrderFlow terminado
-- [ ] Preparación de entrevistas
-- [ ] Comenzar postulaciones
+Mi objetivo es **aprender construyendo, explicar las decisiones técnicas y mostrar evidencia verificable en GitHub**.
